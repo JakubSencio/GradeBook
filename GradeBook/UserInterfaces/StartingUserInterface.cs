@@ -80,7 +80,7 @@ namespace GradeBook.UserInterfaces
 
             GradeBookUserInterface.CommandLoop(gradeBook);
         }
-
+        
         public static void HelpCommand()
         {
             Console.WriteLine();

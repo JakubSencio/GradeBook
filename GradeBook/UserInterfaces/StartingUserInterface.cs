@@ -74,7 +74,7 @@ namespace GradeBook.UserInterfaces
             }
             var name = parts[1];
             var gradeBook = BaseGradeBook.Load(name);
-
+            
             if (gradeBook == null)
                 return;
 

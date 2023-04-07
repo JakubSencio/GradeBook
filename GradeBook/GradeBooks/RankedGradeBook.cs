@@ -1,67 +1,68 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using GradeBook.Enums;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GradeBook.GradeBooks
 {
     public class RankedGradeBook : BaseGradeBook
     {
+        public RankedGradeBook(string name, bool isWeighted) : base(name, isWeighted)
+        {
+            Type = GradeBookType.Ranked;
+        }
         public RankedGradeBook(string name) : base(name)
         {
-            Type = Enums.GradeBookType.Ranked;
+            Type = GradeBookType.Ranked;
         }
+
         public override char GetLetterGrade(double averageGrade)
         {
+            int TOP20 = (int)Math.Ceiling(0.2 * Students.Count);
+            List<double> averageGradesList = Students.OrderBy(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
+
             if (Students.Count < 5)
             {
                 throw new InvalidOperationException();
             }
 
-            List<double> oceny = new List<double>();
-
-            foreach (var student in Students)
+            if (averageGrade <= averageGradesList[0])
             {
-                oceny.AddRange(student.Grades);
+                return 'F';
+            }
+            else if (averageGrade <= averageGradesList[TOP20])
+            {
+                return 'D';
+            }
+            else if (averageGrade <= averageGradesList[TOP20 * 2])
+            {
+                return 'C';
             }
 
-            oceny.Sort();
-
-            double top20 = oceny[(int)Math.Ceiling(oceny.Count * 0.2)];
-
-            double top40 = oceny[(int)Math.Ceiling(oceny.Count * 0.4)];
-
-            double top60 = oceny[(int)Math.Ceiling(oceny.Count * 0.6)];
-
-            double top80 = oceny[(int)Math.Ceiling(oceny.Count * 0.8)];
-
-
-            if (top20 < averageGrade)
-                return 'A';
-            else if (top40 < averageGrade)
+            else if (averageGrade <= averageGradesList[TOP20 * 3])
+            {
                 return 'B';
-            else if (top60 < averageGrade)
-                return 'C';
-            else if (top80 < averageGrade)
-                return 'D';
+            }
             else
-                return 'F';
+            {
+                return 'A';
+            }
         }
         public override void CalculateStatistics()
         {
-            if(Students.Count < 5)
+            if (Students == null || Students.Count < 5)
             {
                 Console.WriteLine("Ranked grading requires at least 5 students.");
+                return;
             }
-            base.CalculateStatistics(); 
+            base.CalculateStatistics();
         }
         public override void CalculateStudentStatistics(string name)
         {
-            if(Students.Count < 5)
+            if (Students == null || Students.Count < 5)
             {
                 Console.WriteLine("Ranked grading requires at least 5 students.");
+                return;
             }
             base.CalculateStudentStatistics(name);
         }

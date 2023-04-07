@@ -13,16 +13,25 @@ namespace GradeBook.GradeBooks
     {
         public string Name { get; set; }
         public List<Student> Students { get; set; }
-
         public GradeBookType Type { get; set; }
+        public bool IsWeighted { get; set; }
 
+        public BaseGradeBook(string name, bool isWeighted, GradeBookType type)
+        {
+            Type = type;
+            IsWeighted = isWeighted;
+            Name = name;
+            Students = new List<Student>();
+        }
         public BaseGradeBook(string name, bool isWeighted)
         {
             Name = name;
-            Students = new List<Student>();
             IsWeighted = isWeighted;
         }
-        public bool IsWeighted { get; set; }
+        public BaseGradeBook(string name)
+        {
+            Name = name;
+        }
 
         public void AddStudent(Student student)
         {
@@ -110,20 +119,25 @@ namespace GradeBook.GradeBooks
 
         public virtual double GetGPA(char letterGrade, StudentType studentType)
         {
+            int k = 0;
+            if (IsWeighted && (studentType == StudentType.Honors || studentType == StudentType.DualEnrolled)) k++;
             switch (letterGrade)
             {
                 case 'A':
-                    return 4;
+                    k += 4;
+                    return k;
                 case 'B':
-                    return 3;
+                    k += 3;
+                    return k;
                 case 'C':
-                    return 2;
+                    k += 2;
+                    return k;
                 case 'D':
-                    return 1;
-                case 'F':
-                    return 0;
+                    k += 1;
+                    return k;
+                default:
+                    return k;
             }
-            return 0;
         }
 
         public virtual void CalculateStatistics()
@@ -267,7 +281,7 @@ namespace GradeBook.GradeBooks
                              from type in assembly.GetTypes()
                              where type.FullName == "GradeBook.GradeBooks.StandardGradeBook"
                              select type).FirstOrDefault();
-            
+
             return JsonConvert.DeserializeObject(json, gradebook);
         }
     }

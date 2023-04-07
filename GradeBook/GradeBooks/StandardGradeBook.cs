@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GradeBook.Enums;
 
 namespace GradeBook.GradeBooks
 {
-    public class StandardGradeBook : BaseGradeBook 
+    public class StandardGradeBook : BaseGradeBook
     {
-        public StandardGradeBook(string name, bool isWeigthed, bool isCurved) : base(name, isWeighted)
+        public StandardGradeBook(string name, bool isWeighted) : base(name, isWeighted)
         {
-            Type = Enums.GradeBookType.Standard;
-            IsCurved = isCurved;
+            Type = GradeBookType.Standard;
         }
-        public bool IsCurved { get; set; }
+        public StandardGradeBook(string name) : base(name)
+        {
+            Type = GradeBookType.Standard;
+        }
     }
 }

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace GradeBook.GradeBooks
 {
-    public class StandardGradeBook : BaseGradeBook
+    public class StandardGradeBook : BaseGradeBook 
     {
-        public StandardGradeBook(string name) : base(name)
+        public StandardGradeBook(string name, bool isWeigthed, bool isCurved) : base(name, isWeighted)
         {
             Type = Enums.GradeBookType.Standard;
+            IsCurved = isCurved;
         }
+        public bool IsCurved { get; set; }
     }
 }
